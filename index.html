@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<meta name="theme-color" content="#F4F3EF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="أسعار الدكان - إدارة أسعار المنتجات بدون إنترنت">
+<title>أسعار الدكان</title>
+<style>
+:root{
+  --bg:#F4F3EF;
+  --surface:#FFFFFF;
+  --surface2:#FAFAF7;
+  --text:#1C1917;
+  --muted:#6F6A62;
+  --muted2:#A8A29E;
+  --border:#E9E6E0;
+  --border2:#D9D5CE;
+  --dark:#1C1917;
+  --dark-hover:#2A2623;
+  --green:#166534;
+  --green-bg:#EDF5EE;
+  --red:#B91C1C;
+  --red-bg:#FEF2F2;
+  --radius:16px;
+  --shadow:0 1px 2px rgba(28,25,23,.06),0 1px 3px rgba(28,25,23,.05);
+  --shadow-lg:0 8px 30px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic","Noto Kufi Arabic",Tahoma,Arial,sans-serif;
+  background:#E8E6E0;
+  color:var(--text);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.app{
+  max-width:520px;
+  margin:0 auto;
+  background:var(--bg);
+  min-height:100dvh;
+  position:relative;
+  box-shadow:0 0 0 1px rgba(0,0,0,.06),0 0 40px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+}
+/* Sticky Header */
+.sticky-top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--bg);
+  padding:14px 16px 12px 16px;
+  border-bottom:1px solid var(--border);
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+.logo{
+  width:44px;height:44px;
+  background:var(--dark);
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.logo svg{width:24px;height:24px;stroke:#fff}
+.title-wrap{flex:1;min-width:0}
+.title-wrap h1{
+  margin:0;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.2px;
+  line-height:1.2;
+}
+.offline-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12.5px;
+  color:var(--green);
+  background:var(--green-bg);
+  border:1px solid #D8E8DA;
+  padding:2px 10px;
+  border-radius:100px;
+  margin-top:4px;
+  font-weight:600;
+}
+.dot{width:7px;height:7px;background:#16A34A;border-radius:50%;box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.dot.off{background:#D97706;box-shadow:0 0 0 3px rgba(217,119,6,.15)}
+.icon-btn{
+  width:44px;height:44px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--text);
+  flex-shrink:0;
+  transition:background .15s;
+}
+.icon-btn:active{background:#F0EEE9}
+.icon-btn svg{width:20px;height:20px}
+/* Search */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap svg.search-icon{
+  position:absolute;
+  right:16px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;
+  color:var(--muted2);
+  pointer-events:none;
+}
+#searchInput{
+  width:100%;
+  height:56px;
+  border:1.5px solid var(--border2);
+  background:var(--surface);
+  border-radius:14px;
+  padding:0 50px 0 44px;
+  font-size:17px;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+#searchInput::placeholder{color:var(--muted2)}
+#searchInput:focus{border-color:var(--dark);box-shadow:0 0 0 3px rgba(28,25,23,.08)}
+.clear-btn{
+  position:absolute;
+  left:8px;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;
+  border:none;background:#EFEDE8;
+  border-radius:10px;
+  display:none;
+  align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:18px;
+  color:var(--muted);
+  line-height:1;
+}
+.clear-btn.show{display:flex}
+/* Add button */
+.add-btn{
+  width:100%;
+  height:54px;
+  background:var(--dark);
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  font-size:17px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:background .15s,transform .1s;
+}
+.add-btn:active{background:var(--dark-hover);transform:scale(.99)}
+.add-btn svg{width:22px;height:22px}
+/* Meta row */
+.meta-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px 8px 16px;
+}
+.count-text{font-size:14px;color:var(--muted);font-weight:600}
+.sort-wrap{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.sort-wrap select{
+  font-family:inherit;
+  font-size:13.5px;
+  font-weight:600;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:10px;
+  padding:7px 10px;
+  color:var(--text);
+  outline:none;
+  cursor:pointer;
+}
+/* List */
+.list{
+  padding:4px 16px 90px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:transform .12s,box-shadow .12s;
+  animation:fadeUp .25s ease both;
+}
+.card:active{transform:scale(.99)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.thumb{
+  width:68px;height:68px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#F0EEE9;
+  flex-shrink:0;
+  border:1px solid var(--border);
+}
+.avatar{
+  width:68px;height:68px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  font-weight:800;
+  flex-shrink:0;
+  border:1px solid var(--border);
+}
+.card-info{flex:1;min-width:0}
+.card-name{
+  font-size:16px;
+  font-weight:700;
+  margin:0 0 4px 0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  line-height:1.4;
+}
+.card-name mark{background:#FEF3C7;border-radius:4px;padding:0 2px}
+.price-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sell-price{font-size:18px;font-weight:800;letter-spacing:-.2px}
+.sell-price small{font-size:12px;font-weight:600;color:var(--muted)}
+.wholesale{font-size:13px;color:var(--muted);font-weight:500}
+.profit{
+  font-size:12px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:100px;
+  margin-right:auto;
+  white-space:nowrap;
+}
+.profit.pos{background:var(--green-bg);color:var(--green)}
+.profit.neg{background:var(--red-bg);color:var(--red)}
+.card-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.mini-btn{
+  width:38px;height:38px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--muted);
+  transition:background .15s;
+}
+.mini-btn:active{background:#EFEDE8}
+.mini-btn svg{width:17px;height:17px}
+.mini-btn.del{color:#B9B2A8}
+.mini-btn.del:active{background:var(--red-bg);color:var(--red);border-color:#FECACA}
+/* Empty */
+.empty{
+  text-align:center;
+  padding:50px 20px;
+  background:var(--surface);
+  border:1px dashed var(--border2);
+  border-radius:18px;
+  margin-top:8px;
+}
+.empty-icon{
+  width:64px;height:64px;
+  background:#F0EEE9;
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px auto;
+}
+.empty-icon svg{width:30px;height:30px;color:var(--muted2)}
+.empty h3{margin:0 0 6px 0;font-size:17px}
+.empty p{margin:0;font-size:14px;color:var(--muted)}
+/* Footer */
+.app-footer{
+  text-align:center;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  font-size:12.5px;
+  color:var(--muted2);
+  border-top:1px solid var(--border);
+  background:var(--bg);
+}
+/* Overlay / Sheet */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(28,25,23,.45);
+  z-index:50;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  backdrop-filter:blur(2px);
+}
+.overlay.open{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{
+  width:100%;
+  max-width:520px;
+  background:#FBFAF8;
+  border-radius:22px 22px 0 0;
+  padding:10px 20px calc(20px + env(safe-area-inset-bottom)) 20px;
+  max-height:93dvh;
+  overflow-y:auto;
+  animation:slideUp .25s cubic-bezier(.32,.72,.35,1);
+  overscroll-behavior:contain;
+}
+@keyframes slideUp{from{transform:translateY(60px);opacity:.5}to{transform:translateY(0);opacity:1}}
+.handle{width:40px;height:5px;background:#D6D3D1;border-radius:100px;margin:6px auto 14px auto}
+.sheet h2{margin:0 0 16px 0;font-size:19px;font-weight:800;text-align:center}
+.sheet h2 .sub{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
+/* Image picker */
+.img-section{margin-bottom:16px}
+.preview-box{
+  width:132px;height:132px;
+  margin:0 auto 12px auto;
+  border-radius:18px;
+  border:2px dashed var(--border2);
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  position:relative;
+  flex-direction:column;
+  gap:4px;
+}
+.preview-box.has-img{border-style:solid;border-color:var(--border)}
+.preview-box img{width:100%;height:100%;object-fit:cover}
+.preview-placeholder{color:var(--muted2);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.preview-placeholder svg{width:32px;height:32px}
+.preview-loading{font-size:13px;color:var(--muted);font-weight:600;text-align:center;padding:10px}
+.img-btns{display:flex;gap:10px}
+.img-btn{
+  flex:1;
+  height:48px;
+  border-radius:12px;
+  border:1.5px solid var(--border2);
+  background:var(--surface);
+  font-family:inherit;
+  font-size:14.5px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  color:var(--text);
+}
+.img-btn:active{background:#F0EEE9}
+.img-btn svg{width:19px;height:19px}
+.img-btn.primary{background:var(--dark);color:#fff;border-color:var(--dark)}
+.remove-img{
+  display:block;margin:8px auto 0 auto;
+  background:none;border:none;
+  color:var(--red);font-size:13px;font-weight:600;font-family:inherit;
+  cursor:pointer;padding:6px 12px;
+}
+/* Form */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
+.field input{
+  width:100%;
+  height:54px;
+  border:1.5px solid var(--border2);
+  border-radius:13px;
+  background:var(--surface);
+  padding:0 16px;
+  font-size:17px;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.field input:focus{border-color:var(--dark);box-shadow:0 0 0 3px rgba(28,25,23,.08)}
+.field input::placeholder{color:var(--muted2);font-size:15px}
+.field .hint{font-size:12.5px;color:var(--muted);margin-top:5px}
+.row2{display:flex;gap:10px}
+.row2 .field{flex:1}
+.price-input-wrap{position:relative}
+.price-input-wrap input{padding-left:52px;text-align:right;font-weight:700;font-size:19px;letter-spacing:.2px}
+.currency-tag{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:13px;font-weight:700;color:var(--muted);
+  pointer-events:none;
+}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+.profit-preview{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  font-size:15px;
+  font-weight:700;
+}
+.profit-preview .val-pos{color:var(--green)}
+.profit-preview .val-neg{color:var(--red)}
+.profit-preview .val-zero{color:var(--muted)}
+.save-btn{
+  width:100%;height:56px;
+  background:var(--dark);color:#fff;
+  border:none;border-radius:14px;
+  font-size:17px;font-weight:800;font-family:inherit;
+  cursor:pointer;
+  transition:background .15s,transform .1s;
+}
+.save-btn:active{background:var(--dark-hover);transform:scale(.99)}
+.save-btn:disabled{opacity:.6;cursor:not-allowed}
+.cancel-btn{
+  width:100%;height:50px;
+  background:transparent;
+  border:none;
+  font-size:15px;font-weight:600;font-family:inherit;
+  color:var(--muted);
+  cursor:pointer;
+  margin-top:4px;
+}
+/* Detail */
+.detail-img-wrap{text-align:center;margin-bottom:14px}
+.detail-img{
+  width:170px;height:170px;
+  border-radius:20px;
+  object-fit:cover;
+  border:1px solid var(--border);
+  background:#fff;
+}
+.detail-avatar{
+  width:170px;height:170px;
+  border-radius:20px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:64px;font-weight:800;
+  border:1px solid var(--border);
+}
+.detail-name{font-size:22px;font-weight:800;text-align:center;margin:0 0 14px 0;line-height:1.4}
+.detail-prices{display:flex;gap:10px;margin-bottom:12px}
+.dprice{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:14px 10px;
+  text-align:center;
+}
+.dprice .lbl{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.dprice .val{font-size:23px;font-weight:800;letter-spacing:-.3px}
+.dprice .val small{font-size:13px;font-weight:600;color:var(--muted)}
+.dprice.sell{border:2px solid var(--dark);background:#fff}
+.dprice.sell .val{font-size:26px}
+.detail-profit{
+  text-align:center;
+  font-size:14.5px;font-weight:700;
+  padding:11px;
+  border-radius:12px;
+  margin-bottom:14px;
+}
+.detail-profit.pos{background:var(--green-bg);color:var(--green)}
+.detail-profit.neg{background:var(--red-bg);color:var(--red)}
+.detail-btns{display:flex;gap:10px;margin-bottom:6px}
+.detail-btns button{
+  flex:1;height:52px;border-radius:13px;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-copy{background:var(--surface);border:1.5px solid var(--border2);color:var(--text)}
+.btn-edit{background:var(--dark);color:#fff;border:none}
+.btn-del-full{
+  width:100%;height:48px;border-radius:12px;margin-top:8px;
+  background:transparent;border:1px solid #E7C9C9;color:var(--red);
+  font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;
+}
+/* Confirm */
+.confirm-card{
+  width:calc(100% - 48px);
+  max-width:400px;
+  background:#fff;
+  border-radius:20px;
+  padding:24px 20px 18px 20px;
+  text-align:center;
+  animation:popIn .2s ease;
+  margin-bottom:30dvh;
+}
+@keyframes popIn{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-card h3{margin:0 0 8px 0;font-size:17px}
+.confirm-card p{margin:0 0 18px 0;font-size:14px;color:var(--muted)}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns button{flex:1;height:50px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.btn-no{background:#F0EEE9;border:none;color:var(--text)}
+.btn-yes{background:var(--red);border:none;color:#fff}
+/* Settings */
+.set-row{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.set-row .t{font-size:14px;font-weight:700;margin-bottom:2px}
+.set-row .d{font-size:13px;color:var(--muted)}
+.set-row input{
+  width:100%;height:48px;margin-top:10px;
+  border:1.5px solid var(--border2);border-radius:11px;
+  padding:0 14px;font-size:16px;font-family:inherit;font-weight:700;
+  outline:none;background:#fff;
+}
+.set-btn{
+  width:100%;height:50px;border-radius:12px;
+  font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--border2);background:var(--surface);color:var(--text);
+  margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.set-btn:active{background:#F0EEE9}
+.set-btn.danger{color:var(--red);border-color:#E9B8B8;background:#FFF8F8}
+.set-btn svg{width:18px;height:18px}
+/* Toast */
+.toast{
+  position:fixed;
+  bottom:calc(24px + env(safe-area-inset-bottom));
+  right:50%;transform:translateX(50%) translateY(20px);
+  background:var(--dark);color:#fff;
+  padding:13px 22px;
+  border-radius:100px;
+  font-size:14.5px;font-weight:700;
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s,transform .2s;
+  white-space:nowrap;
+  box-shadow:var(--shadow-lg);
+  max-width:calc(100vw - 40px);
+  overflow:hidden;text-overflow:ellipsis;
+}
+.toast.show{opacity:1;transform:translateX(50%) translateY(0)}
+@media(min-width:560px){
+  body{padding:24px 0}
+  .app{border-radius:24px;min-height:calc(100dvh - 48px);overflow:hidden}
+  .overlay{align-items:center;padding:20px}
+  .sheet{border-radius:22px}
+  .confirm-card{margin-bottom:0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sticky-top">
+    <div class="header-row">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/><path d="M9 21v-6h6v6"/></svg>
+      </div>
+      <div class="title-wrap">
+        <h1>أسعار الدكان</h1>
+        <span class="offline-badge" id="offlineBadge"><span class="dot" id="netDot"></span><span id="netText">يعمل بدون إنترنت</span></span>
+      </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="الإعدادات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="ابحث عن منتج..." autocomplete="off" enterkeyhint="search">
+      <button class="clear-btn" id="clearSearch">✕</button>
+    </div>
+    <button class="add-btn" id="addBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      إضافة منتج
+    </button>
+  </div>
+
+  <div class="meta-row">
+    <span class="count-text" id="countText">لا توجد منتجات</span>
+    <div class="sort-wrap">
+      <span>ترتيب:</span>
+      <select id="sortSelect">
+        <option value="newest">الأحدث</option>
+        <option value="name">الاسم أ-ي</option>
+        <option value="sell_asc">السعر: الأقل</option>
+        <option value="sell_desc">السعر: الأعلى</option>
+        <option value="profit">الأكثر ربحًا</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="list" id="productList"></div>
+
+  <div class="app-footer">تُحفظ البيانات على جهازك فقط &bull; سريع ويعمل بدون إنترنت</div>
+</div>
+
+<!-- Add / Edit Sheet -->
+<div class="overlay" id="formOverlay">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h2 id="formTitle">منتج جديد<span class="sub">أضف صورة وأسعار المنتج</span></h2>
+    <div class="img-section">
+      <div class="preview-box" id="previewBox">
+        <div class="preview-placeholder" id="previewPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          <span>صورة المنتج</span>
+        </div>
+      </div>
+      <div class="img-btns">
+        <button class="img-btn primary" id="pickGalleryBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg>
+          اختر صورة
+        </button>
+        <button class="img-btn" id="pickCameraBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          كاميرا
+        </button>
+      </div>
+      <button class="remove-img" id="removeImgBtn" style="display:none" type="button">إزالة الصورة</button>
+      <input type="file" id="galleryInput" accept="image/*" hidden>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+    </div>
+    <div class="field">
+      <label for="fName">اسم المنتج</label>
+      <input type="text" id="fName" placeholder="مثال: حليب المراعي 1 لتر" autocomplete="off" maxlength="80">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="fWholesale">سعر الجملة</label>
+        <div class="price-input-wrap">
+          <input type="number" id="fWholesale" placeholder="0" min="0" step="0.01" inputmode="decimal">
+          <span class="currency-tag" id="curTag1">د.ل</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fSell">سعر البيع</label>
+        <div class="price-input-wrap">
+          <input type="number" id="fSell" placeholder="0" min="0" step="0.01" inputmode="decimal">
+          <span class="currency-tag" id="curTag2">د.ل</span>
+        </div>
+      </div>
+    </div>
+    <div class="profit-preview" id="profitPreview">
+      <span>الربح المتوقع</span>
+      <span id="profitVal" class="val-zero">—</span>
+    </div>
+    <button class="save-btn" id="saveBtn">حفظ المنتج</button>
+    <button class="cancel-btn" id="cancelFormBtn">إلغاء</button>
+  </div>
+</div>
+
+<!-- Detail Sheet -->
+<div class="overlay" id="detailOverlay">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="detail-img-wrap" id="detailImgWrap"></div>
+    <h2 class="detail-name" id="detailName" dir="auto"></h2>
+    <div class="detail-prices">
+      <div class="dprice">
+        <div class="lbl">سعر الجملة</div>
+        <div class="val" id="detailWholesale">—</div>
+      </div>
+      <div class="dprice sell">
+        <div class="lbl">سعر البيع</div>
+        <div class="val" id="detailSell">—</div>
+      </div>
+    </div>
+    <div class="detail-profit" id="detailProfit"></div>
+    <div class="detail-btns">
+      <button class="btn-copy" id="copyPriceBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        نسخ السعر
+      </button>
+      <button class="btn-edit" id="detailEditBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        تعديل
+      </button>
+    </div>
+    <button class="btn-del-full" id="detailDeleteBtn">حذف المنتج</button>
+    <button class="cancel-btn" id="closeDetailBtn">إغلاق</button>
+  </div>
+</div>
+
+<!-- Settings Sheet -->
+<div class="overlay" id="settingsOverlay">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h2>الإعدادات<span class="sub">التطبيق يعمل بالكامل على جهازك</span></h2>
+    <div class="set-row">
+      <div class="t">العملة</div>
+      <div class="d">الرمز الذي يظهر بجانب الأسعار</div>
+      <input type="text" id="currencyInput" placeholder="د.ل" maxlength="6">
+    </div>
+    <div class="set-row">
+      <div class="t" id="storageTitle">التخزين</div>
+      <div class="d" id="storageInfo">—</div>
+    </div>
+    <button class="set-btn" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+      تصدير نسخة احتياطية
+    </button>
+    <button class="set-btn" id="importBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+      استيراد نسخة احتياطية
+    </button>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+    <button class="set-btn danger" id="clearAllBtn">حذف جميع المنتجات</button>
+    <button class="cancel-btn" id="closeSettingsBtn">إغلاق</button>
+  </div>
+</div>
+
+<!-- Confirm -->
+<div class="overlay" id="confirmOverlay" style="align-items:center">
+  <div class="confirm-card">
+    <h3 id="confirmTitle">حذف المنتج؟</h3>
+    <p id="confirmMsg">هل أنت متأكد؟ لا يمكن التراجع عن الحذف.</p>
+    <div class="confirm-btns">
+      <button class="btn-no" id="confirmNo">تراجع</button>
+      <button class="btn-yes" id="confirmYes">حذف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var LS_KEY='dukkan_products_v1';
+var LS_CUR='dukkan_currency_v1';
+var LS_SORT='dukkan_sort_v1';
+
+var products=[];
+var currency='د.ل';
+var sortBy='newest';
+var searchQuery='';
+var editingId=null;
+var selectedImage=null;
+var detailId=null;
+var pendingAction=null;
+var toastTimer=null;
+
+var $=function(id){return document.getElementById(id);};
+var listEl=$('productList'), searchInput=$('searchInput'), clearBtn=$('clearSearch'),
+countText=$('countText'), sortSelect=$('sortSelect'),
+formOverlay=$('formOverlay'), formTitle=$('formTitle'),
+fName=$('fName'), fWholesale=$('fWholesale'), fSell=$('fSell'),
+profitVal=$('profitVal'), saveBtn=$('saveBtn'),
+previewBox=$('previewBox'), previewPlaceholder=$('previewPlaceholder'),
+galleryInput=$('galleryInput'), cameraInput=$('cameraInput'),
+detailOverlay=$('detailOverlay'),
+settingsOverlay=$('settingsOverlay'), currencyInput=$('currencyInput'),
+confirmOverlay=$('confirmOverlay'),
+toastEl=$('toast');
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function escapeHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function norm(s){
+  return String(s||'').replace(/[\u064B-\u0652\u0670]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase().trim();
+}
+function toWesternDigits(s){
+  var m={'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','٫':'.','٬':''};
+  return String(s).replace(/[٠-٩٫٬]/g,function(c){return m[c];});
+}
+function parsePrice(v){
+  if(v==null||v==='')return NaN;
+  var n=parseFloat(toWesternDigits(String(v).trim()).replace(/,/g,'.').replace(/[^\d.\-]/g,''));
+  return n;
+}
+function fmtNum(n){
+  if(isNaN(n))return '—';
+  if(Number.isInteger(n))return n.toString();
+  return String(Math.round(n*100)/100);
+}
+function fmtPrice(n){ if(isNaN(n))return '—'; return fmtNum(n)+' <small>'+escapeHtml(currency)+'</small>'; }
+function fmtPricePlain(n){ if(isNaN(n))return '—'; return fmtNum(n)+' '+currency; }
+function plural(n){
+  if(n===0)return 'لا توجد منتجات';
+  if(n===1)return 'منتج واحد';
+  if(n===2)return 'منتجان';
+  if(n>=3&&n<=10)return n+' منتجات';
+  return n+' منتج';
+}
+function toast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){toastEl.classList.remove('show');},2200);
+}
+function vibrate(){ try{ if(navigator.vibrate)navigator.vibrate(15);}catch(e){} }
+
+/* ---------- Storage ---------- */
+function load(){
+  try{
+    var raw=localStorage.getItem(LS_KEY);
+    if(raw){ products=JSON.parse(raw)||[]; }
+    else{
+      products=seedData();
+      persist();
+    }
+  }catch(e){ products=seedData(); }
+  try{
+    var c=localStorage.getItem(LS_CUR); if(c)currency=c;
+    var s=localStorage.getItem(LS_SORT); if(s)sortBy=s;
+  }catch(e){}
+}
+function persist(){
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify(products));
+    localStorage.setItem(LS_CUR,currency);
+    localStorage.setItem(LS_SORT,sortBy);
+    return true;
+  }catch(e){
+    toast('مساحة التخزين ممتلئة — احذف بعض الصور');
+    return false;
+  }
+}
+function storageSize(){
+  try{
+    var s=(localStorage.getItem(LS_KEY)||'').length;
+    if(s<1024)return s+' بايت';
+    if(s<1024*1024)return (s/1024).toFixed(1)+' ك.ب';
+    return (s/1024/1024).toFixed(2)+' م.ب';
+  }catch(e){return '—';}
+}
+function seedData(){
+  var now=Date.now();
+  return [
+    {id:uid()+'1',name:'حليب كامل الدسم 1 لتر',wholesale:4.5,sell:6,image:null,createdAt:now-5000},
+    {id:uid()+'2',name:'سكر أبيض 1 كغ',wholesale:3.25,sell:4.5,image:null,createdAt:now-4000},
+    {id:uid()+'3',name:'زيت نباتي 1.5 لتر',wholesale:11,sell:13.5,image:null,createdAt:now-3000},
+    {id:uid()+'4',name:'أرز بسمتي 5 كغ',wholesale:28,sell:34,image:null,createdAt:now-2000},
+    {id:uid()+'5',name:'قهوة مطحونة 250غ',wholesale:9.75,sell:12,image:null,createdAt:now-1000}
+  ];
+}
+
+/* ---------- Avatar colors ---------- */
+var palettes=[
+  {bg:'#EDE8DF',fg:'#5B5347'},{bg:'#E2EDE3',fg:'#2F5D33'},
+  {bg:'#E4E7F5',fg:'#38438F'},{bg:'#F3DCDC',fg:'#8F3A3A'},
+  {bg:'#FFF0C8',fg:'#7A5B12'},{bg:'#DCEEF5',fg:'#1F5B7A'}
+];
+function paletteFor(name){
+  var h=0; var s=String(name||'?');
+  for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;
+  return palettes[h%palettes.length];
+}
+function initialOf(name){
+  var s=String(name||'').trim();
+  return s?s[0]:'?';
+}
+function thumbHTML(p){
+  if(p.image){
+    return '<img class="thumb" src="'+p.image+'" alt="" loading="lazy">';
+  }
+  var pal=paletteFor(p.name);
+  return '<div class="avatar" style="background:'+pal.bg+';color:'+pal.fg+'">'+escapeHtml(initialOf(p.name))+'</div>';
+}
+function highlightName(name,q){
+  var esc=escapeHtml(name);
+  if(!q)return esc;
+  var nq=norm(q);
+  if(!nq||nq.length<1)return esc;
+  // simple highlight: find normalized match is complex, do direct case-insensitive substring on original
+  try{
+    var idx=name.toLowerCase().indexOf(q.toLowerCase().trim());
+    if(idx<0){
+      // try normalized search char by char fallback: skip highlight
+      return esc;
+    }
+    var qlen=q.trim().length;
+    var before=escapeHtml(name.slice(0,idx));
+    var mid=escapeHtml(name.slice(idx,idx+qlen));
+    var after=escapeHtml(name.slice(idx+qlen));
+    return before+'<mark>'+mid+'</mark>'+after;
+  }catch(e){return esc;}
+}
+
+/* ---------- Render ---------- */
+function getFiltered(){
+  var q=norm(searchQuery);
+  var arr=products.slice();
+  if(q){
+    arr=arr.filter(function(p){return norm(p.name).indexOf(q)!==-1;});
+  }
+  if(sortBy==='name')arr.sort(function(a,b){return String(a.name).localeCompare(String(b.name),'ar');});
+  else if(sortBy==='sell_asc')arr.sort(function(a,b){return a.sell-b.sell;});
+  else if(sortBy==='sell_desc')arr.sort(function(a,b){return b.sell-a.sell;});
+  else if(sortBy==='profit')arr.sort(function(a,b){return (b.sell-b.wholesale)-(a.sell-a.wholesale);});
+  else arr.sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);});
+  return arr;
+}
+function render(){
+  var arr=getFiltered();
+  var total=products.length;
+  if(searchQuery.trim()){
+    countText.textContent = arr.length===0 ? 'لا توجد نتائج' : plural(arr.length)+' (من '+total+')';
+  }else{
+    countText.textContent = plural(total);
+  }
+  if(arr.length===0){
+    if(searchQuery.trim()){
+      listEl.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div><h3>لا توجد نتائج</h3><p>جرّب كلمة أخرى أو أضف هذا المنتج جديدًا</p></div>';
+    }else{
+      listEl.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><h3>القائمة فارغة</h3><p>اضغط على زر "إضافة منتج" لبدء تسجيل أسعار الدكان</p></div>';
+    }
+    return;
+  }
+  var html='';
+  for(var i=0;i<arr.length;i++){
+    var p=arr[i];
+    var profit=p.sell-p.wholesale;
+    var pc=profit>0?'pos':(profit<0?'neg':'pos');
+    var psign=profit>0?'+':'';
+    html+='<div class="card" data-id="'+p.id+'" style="animation-delay:'+Math.min(i*25,200)+'ms">'
+      +thumbHTML(p)
+      +'<div class="card-info"><div class="card-name" dir="auto">'+highlightName(p.name,searchQuery)+'</div>'
+      +'<div class="price-row"><span class="sell-price">'+fmtPrice(p.sell)+'</span>'
+      +'<span class="wholesale">جملة '+fmtNum(p.wholesale)+'</span>'
+      +'<span class="profit '+pc+'">'+psign+fmtNum(Math.round(profit*100)/100)+'</span>'
+      +'</div></div>'
+      +'<div class="card-actions">'
+      +'<button class="mini-btn edit" data-edit="'+p.id+'" aria-label="تعديل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>'
+      +'<button class="mini-btn del" data-del="'+p.id+'" aria-label="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+      +'</div></div>';
+  }
+  listEl.innerHTML=html;
+}
+
+/* ---------- Overlays ---------- */
+function lockScroll(l){document.body.style.overflow=l?'hidden':'';}
+function openOverlay(el){el.classList.add('open');lockScroll(true);}
+function closeOverlay(el){el.classList.remove('open');if(!document.querySelector('.overlay.open'))lockScroll(false);}
+
+/* ---------- Form ---------- */
+function updateCurTags(){
+  $('curTag1').textContent=currency;
+  $('curTag2').textContent=currency;
+}
+function updatePreview(){
+  previewBox.innerHTML='';
+  if(selectedImage){
+    previewBox.classList.add('has-img');
+    var img=document.createElement('img');
+    img.src=selectedImage; img.alt='معاينة';
+    previewBox.appendChild(img);
+    $('removeImgBtn').style.display='block';
+  }else{
+    previewBox.classList.remove('has-img');
+    var d=document.createElement('div');
+    d.className='preview-placeholder';
+    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L6 20"/></svg><span>صورة المنتج</span>';
+    previewBox.appendChild(d);
+    $('removeImgBtn').style.display='none';
+  }
+}
+function updateProfitPreview(){
+  var w=parsePrice(fWholesale.value), s=parsePrice(fSell.value);
+  if(isNaN(w)||isNaN(s)){
+    profitVal.textContent='—'; profitVal.className='val-zero'; return;
+  }
+  var p=Math.round((s-w)*100)/100;
+  var pct=w>0?Math.round((p/w)*100):0;
+  var txt=(p>0?'+':'')+fmtNum(p)+' '+currency;
+  if(w>0&&!isNaN(pct))txt+=' ('+pct+'%)';
+  profitVal.textContent=txt;
+  profitVal.className=p>0?'val-pos':(p<0?'val-neg':'val-zero');
+}
+function openAdd(){
+  editingId=null;
+  selectedImage=null;
+  formTitle.innerHTML='منتج جديد<span class="sub">أضف صورة وأسعار المنتج</span>';
+  fName.value=''; fWholesale.value=''; fSell.value='';
+  saveBtn.textContent='حفظ المنتج';
+  updatePreview(); updateProfitPreview();
+  openOverlay(formOverlay);
+  setTimeout(function(){fName.focus();},280);
+}
+function openEdit(id){
+  var p=null;
+  for(var i=0;i<products.length;i++)if(products[i].id===id)p=products[i];
+  if(!p)return;
+  editingId=id;
+  selectedImage=p.image||null;
+  formTitle.innerHTML='تعديل المنتج<span class="sub">حدّث البيانات ثم احفظ</span>';
+  fName.value=p.name;
+  fWholesale.value=p.wholesale;
+  fSell.value=p.sell;
+  saveBtn.textContent='حفظ التعديلات';
+  updatePreview(); updateProfitPreview();
+  openOverlay(formOverlay);
+}
+function saveProduct(){
+  var name=fName.value.trim();
+  var w=parsePrice(fWholesale.value);
+  var s=parsePrice(fSell.value);
+  if(name.length<2){toast('اكتب اسم المنتج');fName.focus();return;}
+  if(isNaN(w)||w<0){toast('أدخل سعر الجملة بشكل صحيح');fWholesale.focus();return;}
+  if(isNaN(s)||s<0){toast('أدخل سعر البيع بشكل صحيح');fSell.focus();return;}
+  w=Math.round(w*100)/100; s=Math.round(s*100)/100;
+  if(editingId){
+    for(var i=0;i<products.length;i++){
+      if(products[i].id===editingId){
+        products[i].name=name;products[i].wholesale=w;products[i].sell=s;products[i].image=selectedImage;
+        break;
+      }
+    }
+    toast('تم حفظ التعديلات');
+  }else{
+    products.unshift({id:uid(),name:name,wholesale:w,sell:s,image:selectedImage,createdAt:Date.now()});
+    toast('تم حفظ المنتج');
+  }
+  persist(); render();
+  closeOverlay(formOverlay);
+  vibrate();
+}
+
+/* ---------- Image handling ---------- */
+function showImgLoading(){
+  previewBox.innerHTML='<div class="preview-loading">جاري ضغط الصورة...</div>';
+}
+function handleFile(file){
+  if(!file)return;
+  if(file.type&&file.type.indexOf('image/')!==0){toast('الملف المختار ليس صورة');return;}
+  showImgLoading();
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      try{
+        var max=800;
+        var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+        if(!w||!h){selectedImage=null;updatePreview();toast('تعذر قراءة الصورة');return;}
+        var scale=Math.min(1,max/Math.max(w,h));
+        var nw=Math.max(1,Math.round(w*scale)), nh=Math.max(1,Math.round(h*scale));
+        var canvas=document.createElement('canvas');
+        canvas.width=nw;canvas.height=nh;
+        var ctx=canvas.getContext('2d');
+        ctx.fillStyle='#ffffff';ctx.fillRect(0,0,nw,nh);
+        ctx.drawImage(img,0,0,nw,nh);
+        var q=0.72;
+        var out=canvas.toDataURL('image/jpeg',q);
+        var tries=0;
+        while(out.length>200*1024&&q>0.4&&tries<3){q-=0.15;out=canvas.toDataURL('image/jpeg',q);tries++;}
+        selectedImage=out;
+        updatePreview();
+      }catch(err){selectedImage=null;updatePreview();toast('تعذر معالجة الصورة');}
+    };
+    img.onerror=function(){selectedImage=null;updatePreview();toast('تعذر قراءة الصورة');};
+    img.src=e.target.result;
+  };
+  reader.onerror=function(){selectedImage=null;updatePreview();toast('تعذر قراءة الصورة');};
+  reader.readAsDataURL(file);
+}
+
+/* ---------- Detail ---------- */
+function openDetail(id){
+  var p=null;
+  for(var i=0;i<products.length;i++)if(products[i].id===id)p=products[i];
+  if(!p)return;
+  detailId=id;
+  var wrap=$('detailImgWrap'); wrap.innerHTML='';
+  if(p.image){
+    var im=document.createElement('img');im.src=p.image;im.className='detail-img';im.alt='';
+    wrap.appendChild(im);
+  }else{
+    var pal=paletteFor(p.name);
+    var av=document.createElement('div');av.className='detail-avatar';
+    av.style.background=pal.bg;av.style.color=pal.fg;
+    av.textContent=initialOf(p.name);
+    wrap.appendChild(av);
+  }
+  $('detailName').textContent=p.name;
+  $('detailWholesale').innerHTML=fmtPrice(p.wholesale);
+  $('detailSell').innerHTML=fmtPrice(p.sell);
+  var profit=Math.round((p.sell-p.wholesale)*100)/100;
+  var dp=$('detailProfit');
+  if(profit>0){dp.className='detail-profit pos';dp.textContent='الربح: +'+fmtNum(profit)+' '+currency;}
+  else if(profit<0){dp.className='detail-profit neg';dp.textContent='خسارة: '+fmtNum(profit)+' '+currency;}
+  else{dp.className='detail-profit pos';dp.textContent='بدون ربح';}
+  openOverlay(detailOverlay);
+}
+function copySellPrice(){
+  var p=null;
+  for(var i=0;i<products.length;i++)if(products[i].id===detailId)p=products[i];
+  if(!p)return;
+  var txt=fmtPricePlain(p.sell);
+  function done(){toast('تم نسخ السعر: '+txt);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done,function(){fallback();});
+  }else fallback();
+  function fallback(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(e){toast(txt);}ta.remove();
+  }
+}
+
+/* ---------- Confirm ---------- */
+function askConfirm(title,msg,onYes){
+  $('confirmTitle').textContent=title;
+  $('confirmMsg').textContent=msg;
+  pendingAction=onYes;
+  openOverlay(confirmOverlay);
+}
+function doDelete(id){
+  products=products.filter(function(p){return p.id!==id;});
+  persist();render();
+  closeOverlay(detailOverlay);
+  toast('تم حذف المنتج');
+}
+
+/* ---------- Settings / Backup ---------- */
+function refreshStorageInfo(){
+  currencyInput.value=currency;
+  $('storageInfo').textContent=plural(products.length)+' • حجم البيانات: '+storageSize();
+}
+function exportBackup(){
+  try{
+    var data=JSON.stringify({app:'dukkan',version:1,currency:currency,products:products},null,1);
+    var blob=new Blob([data],{type:'application/json'});
+    var a=document.createElement('a');
+    var d=new Date();
+    var name='dukkan-backup-'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+'.json';
+    a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+    toast('تم تصدير النسخة الاحتياطية');
+  }catch(e){toast('تعذر التصدير');}
+}
+function importBackup(file){
+  if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var obj=JSON.parse(e.target.result);
+      var arr=Array.isArray(obj)?obj:obj.products;
+      if(!Array.isArray(arr))throw 0;
+      var cleaned=[];
+      for(var i=0;i<arr.length;i++){
+        var p=arr[i];
+        if(p&&p.name){
+          cleaned.push({
+            id:String(p.id||uid()+i),
+            name:String(p.name).slice(0,80),
+            wholesale:parseFloat(p.wholesale)||0,
+            sell:parseFloat(p.sell)||0,
+            image:(typeof p.image==='string'&&p.image.indexOf('data:image')===0)?p.image:null,
+            createdAt:p.createdAt||Date.now()
+          });
+        }
+      }
+      if(cleaned.length===0){toast('الملف لا يحتوي على منتجات');return;}
+      askConfirm('استيراد النسخة؟','سيتم استبدال القائمة الحالية بـ '+cleaned.length+' منتج.',function(){
+        products=cleaned;
+        if(obj.currency)currency=String(obj.currency).slice(0,6);
+        updateCurTags();persist();render();refreshStorageInfo();
+        toast('تم الاستيراد بنجاح');
+      });
+    }catch(err){toast('ملف غير صالح');}
+  };
+  r.readAsText(file);
+}
+
+/* ---------- Network badge ---------- */
+function updateNet(){
+  var on=navigator.onLine!==false;
+  $('netDot').className='dot'+(on?'':' off');
+  $('netText').textContent=on?'يعمل بدون إنترنت':'غير متصل — يعمل بشكل طبيعي';
+}
+window.addEventListener('online',updateNet);
+window.addEventListener('offline',updateNet);
+
+/* ---------- Events ---------- */
+var searchT=null;
+searchInput.addEventListener('input',function(){
+  clearTimeout(searchT);
+  var v=this.value;
+  searchT=setTimeout(function(){searchQuery=v;render();},90);
+  clearBtn.classList.toggle('show',v.length>0);
+});
+clearBtn.addEventListener('click',function(){
+  searchInput.value='';searchQuery='';clearBtn.classList.remove('show');render();searchInput.focus();
+});
+sortSelect.addEventListener('change',function(){sortBy=this.value;persist();render();});
+$('addBtn').addEventListener('click',openAdd);
+$('cancelFormBtn').addEventListener('click',function(){closeOverlay(formOverlay);});
+saveBtn.addEventListener('click',saveProduct);
+fWholesale.addEventListener('input',updateProfitPreview);
+fSell.addEventListener('input',updateProfitPreview);
+fName.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fWholesale.focus();}});
+fSell.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveProduct();}});
+
+$('pickGalleryBtn').addEventListener('click',function(){galleryInput.click();});
+$('pickCameraBtn').addEventListener('click',function(){cameraInput.click();});
+galleryInput.addEventListener('change',function(){handleFile(this.files&&this.files[0]);this.value='';});
+cameraInput.addEventListener('change',function(){handleFile(this.files&&this.files[0]);this.value='';});
+$('removeImgBtn').addEventListener('click',function(){selectedImage=null;updatePreview();});
+
+listEl.addEventListener('click',function(e){
+  var del=e.target.closest('[data-del]');
+  if(del){e.stopPropagation();var id1=del.getAttribute('data-del');
+    askConfirm('حذف المنتج؟','هل أنت متأكد من حذف هذا المنتج؟',function(){doDelete(id1);});return;}
+  var ed=e.target.closest('[data-edit]');
+  if(ed){e.stopPropagation();openEdit(ed.getAttribute('data-edit'));return;}
+  var card=e.target.closest('.card');
+  if(card){openDetail(card.getAttribute('data-id'));}
+});
+
+$('closeDetailBtn').addEventListener('click',function(){closeOverlay(detailOverlay);});
+$('DetailEditBtn').addEventListener('click',function(){closeOverlay(detailOverlay);if(detailId)openEdit(detailId);});
+$('DetailDeleteBtn').addEventListener('click',function(){
+  var id=detailId;
+  askConfirm('حذف المنتج؟','هل أنت متأكد من حذف هذا المنتج؟',function(){doDelete(id);});
+});
+$('copyPriceBtn').addEventListener('click',copySellPrice);
+
+$('settingsBtn').addEventListener('click',function(){refreshStorageInfo();openOverlay(settingsOverlay);});
+$('closeSettingsBtn').addEventListener('click',function(){closeOverlay(settingsOverlay);});
+currencyInput.addEventListener('input',function(){
+  var v=this.value.trim()||'د.ل';
+  currency=v.slice(0,6);
+  updateCurTags();
+});
+currencyInput.addEventListener('change',function(){persist();render();toast('تم حفظ العملة');});
+$('exportBtn').addEventListener('click',exportBackup);
+$('importBtn').addEventListener('click',function(){$('importFile').click();});
+$('importFile').addEventListener('change',function(){importBackup(this.files&&this.files[0]);this.value='';});
+$('clearAllBtn').addEventListener('click',function(){
+  if(products.length===0){toast('القائمة فارغة أصلًا');return;}
+  askConfirm('حذف كل البيانات؟','سيتم حذف جميع المنتجات نهائيًا من جهازك.',function(){
+    products=[];persist();render();refreshStorageInfo();toast('تم حذف جميع المنتجات');
+  });
+});
+
+$('confirmNo').addEventListener('click',function(){closeOverlay(confirmOverlay);pendingAction=null;});
+$('confirmYes').addEventListener('click',function(){closeOverlay(confirmOverlay);if(pendingAction){var f=pendingAction;pendingAction=null;f();}});
+
+formOverlay.addEventListener('click',function(e){if(e.target===formOverlay)closeOverlay(formOverlay);});
+detailOverlay.addEventListener('click',function(e){if(e.target===detailOverlay)closeOverlay(detailOverlay);});
+settingsOverlay.addEventListener('click',function(e){
+  if(e.target===settingsOverlay){persist();render();closeOverlay(settingsOverlay);}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(confirmOverlay.classList.contains('open')){closeOverlay(confirmOverlay);pendingAction=null;}
+    else if(formOverlay.classList.contains('open'))closeOverlay(formOverlay);
+    else if(detailOverlay.classList.contains('open'))closeOverlay(detailOverlay);
+    else if(settingsOverlay.classList.contains('open')){persist();render();closeOverlay(settingsOverlay);}
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchInput.focus();}
+});
+
+/* ---------- Init ---------- */
+load();
+sortSelect.value=sortBy;
+updateCurTags();
+updateNet();
+render();
+})();
+</script>
+</body>
+</html>
